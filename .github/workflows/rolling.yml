@@ -86,7 +86,7 @@ jobs:
       - name: Setup tailscale repo
         working-directory: vyos-build
         run: |
-          wget -q https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg  -O tailscale.gpg
+          wget -q https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg  -O ../tailscale/tailscale.gpg
           mkdir -p data/live-build-config/includes.chroot/etc/default
           mkdir -p data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d
           cp ../tailscale/tailscaled data/live-build-config/includes.chroot/etc/default/tailscaled
@@ -104,7 +104,7 @@ jobs:
               --build-type ${{ env.VYOS_BUILD_TYPE }} \
               --build-comment "VyOS with additional packages" \
               --version ${{ steps.vars.outputs.tag-name }} \
-              --custom-apt-key ./tailscale.gpg \
+              --custom-apt-key $(pwd)/../tailscale.gpg \
               --custom-apt-entry "deb https://pkgs.tailscale.com/stable/debian bullseye main" \
               --custom-package "age" \
               --custom-package "bat" \
