@@ -42,10 +42,6 @@ jobs:
           echo "tag-name=${{ env.VYOS_VERSION }}-${build_date}" >> "$GITHUB_OUTPUT"
           echo "iso-name=${{ env.VYOS_VERSION }}-${build_date}-${{ env.VYOS_ARCH }}" >> "$GITHUB_OUTPUT"
 
-      - name: Setup Tools
-        run: |
-          sudo apt install -y alien
-
       - name: Clone vyos-build
         run: |
           git clone -b ${{ env.VYOS_BRANCH }} --single-branch ${{ env.VYOS_URL }}
@@ -65,14 +61,8 @@ jobs:
         with:
           repository: mozilla/sops
           latest: true
-          fileName: "*x86_64.rpm"
+          fileName: "*amd64.deb"
           out-file-path: vyos-build/packages
-
-      - name: Convert any RPMs to DEBs
-        working-directory: vyos-build/packages
-        run: |
-          sudo alien --to-deb *.rpm
-          rm -rf *.rpm
 
       - name: Download and include Mellanox firmware tools
         working-directory: vyos-build/packages
