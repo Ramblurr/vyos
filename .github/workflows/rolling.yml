@@ -33,6 +33,8 @@ jobs:
       #    app_id: "${{ secrets.BOT_APP_ID }}"
       #    private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
+      - uses: actions/checkout@v3
+
       - name: Setup variables
         id: vars
         run: |
