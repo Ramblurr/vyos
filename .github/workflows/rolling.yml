@@ -32,6 +32,8 @@ jobs:
           app_id: "${{ secrets.BOT_APP_ID }}"
           private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
+      - uses: actions/checkout@v3
+
       - name: Setup variables
         id: vars
         run: |
@@ -53,6 +55,15 @@ jobs:
           latest: true
           fileName: "*amd64.deb"
           out-file-path: vyos-build/packages
+
+      - name: Setup tailscale repo
+        working-directory: vyos-build
+        run: |
+          wget -q https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg  -O ../tailscale/tailscale.gpg
+          mkdir -p data/live-build-config/includes.chroot/etc/default
+          mkdir -p data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d
+          cp ../tailscale/tailscaled data/live-build-config/includes.chroot/etc/default/tailscaled
+          cp ../tailscale/override.conf data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d/override.conf
 
       - name: Download SOPS rpm
         uses: robinraju/release-downloader@768b85c8d69164800db5fc00337ab917daf3ce68 # v1.7
@@ -77,13 +88,17 @@ jobs:
               --build-type ${{ env.VYOS_BUILD_TYPE }} \
               --build-comment "VyOS with additional packages" \
               --version ${{ steps.vars.outputs.tag-name }} \
+              --custom-apt-key $(realpath $(pwd)/../tailscale/tailscale.gpg) \
+              --custom-apt-entry "deb https://pkgs.tailscale.com/stable/debian bullseye main" \
               --custom-package "age" \
               --custom-package "bat" \
               --custom-package "git" \
               --custom-package "jo" \
               --custom-package "jq" \
               --custom-package "moreutils" \
-              --custom-package "tree"
+              --custom-package "tree" \
+              --custom-package "tailscale"
+
 
       - name: Create release with artifact
         uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1
