@@ -25,12 +25,12 @@ jobs:
       image: vyos/vyos-build:current
       options: --privileged
     steps:
-      - name: Generate Token
-        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
-        id: generate-token
-        with:
-          app_id: "${{ secrets.BOT_APP_ID }}"
-          private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+      #- name: Generate Token
+      #  uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+      #  id: generate-token
+      #  with:
+      #    app_id: "${{ secrets.BOT_APP_ID }}"
+      #    private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
       - name: Setup variables
         id: vars
@@ -96,7 +96,7 @@ jobs:
       - name: Create release with artifact
         uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1
         with:
-          token: "${{ steps.generate-token.outputs.token }}"
+          #token: "${{ steps.generate-token.outputs.token }}"
           tag: "v${{ steps.vars.outputs.tag-name }}"
           artifacts: "./vyos-build/build/vyos-${{ steps.vars.outputs.iso-name }}.iso"
           artifactErrorsFailBuild: true
