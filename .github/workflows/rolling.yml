@@ -44,7 +44,10 @@ jobs:
           sudo apt install -y alien
 
       - name: Clone vyos-build
-        run: git clone -b ${{ env.VYOS_BRANCH }} --single-branch ${{ env.VYOS_URL }}
+        run: |
+          git clone -b ${{ env.VYOS_BRANCH }} --single-branch ${{ env.VYOS_URL }}
+          cd vyos-build
+          git reset --hard ef9cfa4f709bc2eaaf3d299d77015431facf7af6
 
       - name: Download bottom deb
         uses: robinraju/release-downloader@768b85c8d69164800db5fc00337ab917daf3ce68 # v1.7
