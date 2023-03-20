@@ -77,6 +77,15 @@ jobs:
           rm -rf mft-*-x86_64-deb mft-deb.tgz
           ls -a
 
+      - name: Setup tailscale repo
+        working-directory: vyos-build
+        run: |
+          wget -q https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg -O tailscale.gpg
+          mkdir -p data/live-build-config/includes.chroot/etc/default
+          mkdir -p data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d
+          cp tailscale/tailscaled data/live-build-config/includes.chroot/etc/default/tailscaled
+          cp tailscale/override.conf data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d/override.conf
+
       - name: Configure
         working-directory: vyos-build
         run: |
@@ -86,13 +95,16 @@ jobs:
               --build-type ${{ env.VYOS_BUILD_TYPE }} \
               --build-comment "VyOS with additional packages" \
               --version ${{ steps.vars.outputs.tag-name }} \
+              --custom-apt-key ./tailscale.gpg \
+              --custom-apt-entry "deb https://pkgs.tailscale.com/stable/debian bullseye main" \
               --custom-package "age" \
               --custom-package "bat" \
               --custom-package "git" \
               --custom-package "jo" \
               --custom-package "jq" \
               --custom-package "moreutils" \
-              --custom-package "tree"
+              --custom-package "tree" \
+              --custom-package "tailscale"
 
       - name: Create release with artifact
         uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1
