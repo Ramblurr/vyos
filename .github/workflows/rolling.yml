@@ -94,7 +94,7 @@ jobs:
               --build-type ${{ env.VYOS_BUILD_TYPE }} \
               --build-comment "VyOS with additional packages" \
               --version ${{ steps.vars.outputs.tag-name }} \
-              --custom-apt-key $(realpath $(pwd)/../tailscale.gpg) \
+              --custom-apt-key $(realpath $(pwd)/../tailscale/tailscale.gpg) \
               --custom-apt-entry "deb https://pkgs.tailscale.com/stable/debian bullseye main" \
               --custom-package "age" \
               --custom-package "bat" \
