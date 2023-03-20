@@ -86,8 +86,8 @@ jobs:
           wget -q https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg  -O tailscale.gpg
           mkdir -p data/live-build-config/includes.chroot/etc/default
           mkdir -p data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d
-          cp tailscale/tailscaled data/live-build-config/includes.chroot/etc/default/tailscaled
-          cp tailscale/override.conf data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d/override.conf
+          cp ../tailscale/tailscaled data/live-build-config/includes.chroot/etc/default/tailscaled
+          cp ../tailscale/override.conf data/live-build-config/includes.chroot/etc/systemd/system/tailscaled.service.d/override.conf
 
       - name: Configure
         working-directory: vyos-build
