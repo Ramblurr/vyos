@@ -71,10 +71,11 @@ jobs:
       - name: Download and include Mellanox firmware tools
         working-directory: vyos-build/packages
         run: |
-          wget https://www.mellanox.com/downloads/MFT/mft-4.23.0-104-x86_64-deb.tgz -O mft-deb.tgz
+          wget -q https://www.mellanox.com/downloads/MFT/mft-4.23.0-104-x86_64-deb.tgz -O mft-deb.tgz
           tar -zxvf mft-deb.tgz
           mv mft-*-x86_64-deb/DEBS/ .
           rm -rf mft-*-x86_64-deb mft-deb.tgz
+          ls -a
 
       - name: Configure
         working-directory: vyos-build
